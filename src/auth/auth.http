@@ -1,0 +1,26 @@
+### list auth
+GET http://localhost:3000/auth
+
+### find one developer
+GET http://localhost:3000/auth/2
+
+### create developer
+POST http://localhost:3000/auth
+Content-Type: application/json
+
+{
+    "name": "John Five",
+    "email": "john.five@acme.com",
+    "password": "123456"
+}
+
+### update developer
+PATCH http://localhost:3000/auth/id
+Content-Type: application/json
+
+{
+    "email": "blyati@acme.com"
+}
+
+### delete developer
+DELETE http://localhost:3000/auth/id
