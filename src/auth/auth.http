@@ -2,7 +2,7 @@
 GET http://localhost:3000/auth
 
 ### find one developer
-GET http://localhost:3000/auth/2
+GET http://localhost:3000/auth/f4cf5ec7-3143-4dd9-bcdb-d4faffe2a699
 
 ### create developer
 POST http://localhost:3000/auth

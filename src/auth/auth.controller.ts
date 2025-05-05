@@ -11,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -34,6 +35,14 @@ export class AuthController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
     return this.authService.update(id, updateAuthDto);
+  }
+
+  @Patch(':id/update-password')
+  updatePassword(
+    @Param('id') id: string,
+    @Body() updatePassword: UpdatePasswordDto,
+  ) {
+    return this.authService.updatePassword(id, updatePassword);
   }
 
   @Delete(':id')
