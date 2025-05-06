@@ -7,11 +7,15 @@ import {
   Param,
   Delete,
   HttpCode,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +24,16 @@ export class AuthController {
   @Post()
   create(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.create(createAuthDto);
+  }
+
+  @Post('login')
+  login(@Body() loginAuthDto: LoginAuthDto, @Res() res: Response) {
+    return this.authService.login(loginAuthDto, res);
+  }
+
+  @Get('profile')
+  profile(@Req() req: Request) {
+    return this.authService.profile(req);
   }
 
   @Get()

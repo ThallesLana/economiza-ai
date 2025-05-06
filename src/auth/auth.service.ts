@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
@@ -12,6 +13,9 @@ import { hashPassword, verifyPassword } from '../utils/password.util';
 import { isUUID } from 'class-validator';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import * as jwt from 'jsonwebtoken';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -35,6 +39,55 @@ export class AuthService {
     });
 
     return this.repository.save(newUser);
+  }
+  async login(dto: LoginAuthDto, res: Response) {
+    const { email, password } = dto;
+
+    const user = await this.repository.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isPasswordValid = await verifyPassword(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new ConflictException('Invalid password');
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET ?? 'hi',
+      { expiresIn: '1h' },
+    );
+
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 3600000, // 1 hour
+    });
+
+    return res.send({
+      message: 'Login successful',
+    });
+  }
+
+  profile(req: Request) {
+    const token = req.cookies['jwt'];
+
+    try {
+      const data = jwt.verify(token, process.env.JWT_SECRET ?? 'hi');
+
+      return {
+        message: 'Token is valid',
+        user: data,
+      };
+    } catch {
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 
   async findAll(): Promise<UserResponseDto[]> {

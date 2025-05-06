@@ -16,14 +16,14 @@ A aplicação permite que usuários cadastrem, organizem e acompanhem suas trans
 - [TypeORM](https://typeorm.io/) - ORM para banco de dados relacional
 - [PostgreSQL](https://www.postgresql.org/) - Banco de dados relacional robusto
 - [Docker](https://www.docker.com/) (opcional) - Para rodar o banco de dados localmente
-- [JWT](https://jwt.io/) - Autenticação segura por token (em breve)
+- [JWT](https://jwt.io/) - Autenticação segura por token
 
 ---
 
 ## 📦 Funcionalidades (MVP)
 
 - ✅ Cadastro de usuários
-- 🔜 Autenticação com JWT
+- ✅ Autenticação com JWT
 - 🔜 CRUD de transações financeiras (entradas e saídas)
 - 🔜 Associação de transações por usuário
 - 🔜 Filtros por data, categoria e tipo (income/expense)
