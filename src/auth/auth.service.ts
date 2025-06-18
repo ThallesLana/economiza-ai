@@ -70,9 +70,9 @@ export class AuthService {
       maxAge: 3600000, // 1 hour
     });
 
-    return res.send({
+    return {
       message: 'Login successful',
-    });
+    };
   }
 
   profile(req: Request) {

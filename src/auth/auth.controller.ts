@@ -27,8 +27,9 @@ export class AuthController {
   }
 
   @Post('login')
-  login(@Body() loginAuthDto: LoginAuthDto, @Res() res: Response) {
-    return this.authService.login(loginAuthDto, res);
+  async login(@Body() loginAuthDto: LoginAuthDto, @Res({passthrough: true}) res: Response) {
+    const result = await this.authService.login(loginAuthDto, res);
+    return result;
   }
 
   @Get('profile')
