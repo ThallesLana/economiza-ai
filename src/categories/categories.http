@@ -1,0 +1,27 @@
+### list categories
+GET http://localhost:3000/categories
+
+### find one category
+GET http://localhost:3000/categories/id
+
+### create category
+POST http://localhost:3000/categories
+Content-Type: application/json
+
+{
+    "name": "Gastos do mês",
+    "description": "Gastos mensais",
+    "userId": "id"
+}
+
+### update category
+PATCH http://localhost:3000/categories/id
+Content-Type: application/json
+
+{
+    "description": "Gastos flexíveis do mês",
+    "userId": "id"
+}
+
+### delete category
+DELETE http://localhost:3000/categories/id
