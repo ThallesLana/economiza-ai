@@ -2,7 +2,6 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
@@ -16,6 +15,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import * as jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
+import { JwtPayload } from 'src/common/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -40,6 +40,7 @@ export class AuthService {
 
     return this.repository.save(newUser);
   }
+
   async login(dto: LoginAuthDto, res: Response) {
     const { email, password } = dto;
 
@@ -75,19 +76,14 @@ export class AuthService {
     };
   }
 
-  profile(req: Request) {
-    const token = req.cookies['jwt'];
-
-    try {
-      const data = jwt.verify(token, process.env.JWT_SECRET ?? 'hi');
-
-      return {
-        message: 'Token is valid',
-        user: data,
-      };
-    } catch {
-      throw new UnauthorizedException('Invalid token');
-    }
+  profile(user: JwtPayload) {
+    return {
+      message: 'Profile retrieved successfully',
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+    };
   }
 
   async findAll(): Promise<UserResponseDto[]> {
@@ -129,9 +125,7 @@ export class AuthService {
   async update(id: string, dto: UpdateAuthDto) {
     const user = await this.handleFindOne(id);
 
-    const { password, ...updateData } = dto;
-
-    this.repository.merge(user, updateData);
+    this.repository.merge(user, dto);
 
     return this.repository.save(user);
   }
