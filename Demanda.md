@@ -18,13 +18,12 @@ Modularização:
 ```bash
 src/
 ├── auth/              # Login, JWT, guardas
-├── users/             # Perfil do usuário
+├── common/            # Filtros, pipes, interceptors
 ├── transactions/      # Receitas, despesas
 ├── categories/        # Alimentação, Transporte, etc.
 ├── goals/             # Metas financeiras
 ├── reports/           # Resumo mensal, exportações
-├── common/            # Filtros, pipes, interceptors
-└── prisma/            # Se usar Prisma, configuração aqui
+├── users/             # Perfil do usuário
 ```
 
 ---
