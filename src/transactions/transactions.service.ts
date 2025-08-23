@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { JwtPayload } from 'src/common/interfaces';
+import { FilterGetTransaction, JwtPayload } from 'src/common/interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Transaction } from './entities/transactions.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
 import { isUUID } from 'class-validator';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { FilterGetTransactionDto } from './dto/filter-get-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -34,9 +35,16 @@ export class TransactionsService {
     return this.repository.save(newTransaction);
   }
 
-  async findAll(user: JwtPayload) {
+  async findAll(user: JwtPayload, filterDto: FilterGetTransactionDto) {
+    const whereClause: FilterGetTransaction = { userId: user.id };
+
+    if (filterDto.type) whereClause.type = filterDto.type;
+    if (filterDto.categoryId) whereClause.categoryId = filterDto.categoryId;
+    if (filterDto.transactionDate)
+      whereClause.transactionDate = filterDto.transactionDate;
+
     return await this.repository.find({
-      where: { userId: user.id },
+      where: whereClause as FindOptionsWhere<Transaction>,
     });
   }
 

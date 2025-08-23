@@ -15,6 +15,7 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import { JwtPayload } from 'src/common/interfaces';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { FilterGetTransactionDto } from './dto/filter-get-transaction.dto';
 
 @Controller('transactions')
 @UseGuards(JwtGuard)
@@ -30,8 +31,11 @@ export class TransactionsController {
   }
 
   @Get()
-  async findAll(@User() user: JwtPayload) {
-    return await this.transactionsService.findAll(user);
+  async findAll(
+    @User() user: JwtPayload,
+    @Body() filterDto: FilterGetTransactionDto,
+  ) {
+    return await this.transactionsService.findAll(user, filterDto);
   }
 
   @Get(':id')

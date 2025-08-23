@@ -24,10 +24,10 @@ A aplicação permite que usuários cadastrem, organizem e acompanhem suas trans
 
 - ✅ Cadastro de usuários
 - ✅ Autenticação com JWT
-- 🔜 CRUD de transações financeiras (entradas e saídas)
+- ✅ CRUD de transações financeiras (entradas e saídas)
 - ✅ CRUD de categorias
-- 🔜 Associação de transações por usuário
-- 🔜 Filtros por data, categoria e tipo (income/expense)
+- ✅ Associação de transações por usuário
+- ✅ Filtros por data, categoria e tipo (income/expense)
 - 🔜 Resumo financeiro (total de entradas, saídas e saldo)
 - 🔜 Sistema de metas e alertas personalizados
 
