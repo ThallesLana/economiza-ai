@@ -1,5 +1,5 @@
-import { Exclude } from 'class-transformer';
 import { Category } from 'src/categories/entities/categories.entity';
+import { UserStatus } from 'src/common/enums/user-status.enum';
 import { Transaction } from 'src/transactions/entities/transactions.entity';
 import {
   Column,
@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 @Entity('Users')
-export class Auth {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -22,8 +22,10 @@ export class Auth {
   email: string;
 
   @Column()
-  @Exclude()
   password: string;
+
+  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
+  status: UserStatus;
 
   @CreateDateColumn()
   createdAt: Date;

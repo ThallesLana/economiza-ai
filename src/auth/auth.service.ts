@@ -4,24 +4,22 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Repository } from 'typeorm';
-import { Auth } from './entities/auth.entity';
+import { User } from '../users/entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { hashPassword, verifyPassword } from '../utils/password.util';
+import { hashPassword, verifyPassword } from '../common/utils/password.util';
 import { isUUID } from 'class-validator';
-import { UserResponseDto } from './dto/user-response.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import * as jwt from 'jsonwebtoken';
-import { Request, Response } from 'express';
-import { JwtPayload } from 'src/common/interfaces';
+import { Response } from 'express';
+import { validateUUID } from 'src/common/utils/validate-uuid.util';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Auth)
-    private readonly repository: Repository<Auth>,
+    @InjectRepository(User)
+    private readonly repository: Repository<User>,
   ) {}
 
   async create(dto: CreateAuthDto) {
@@ -76,29 +74,7 @@ export class AuthService {
     };
   }
 
-  profile(user: JwtPayload) {
-    return {
-      message: 'Profile retrieved successfully',
-      user: {
-        id: user.id,
-        email: user.email,
-      },
-    };
-  }
-
-  async findAll(): Promise<UserResponseDto[]> {
-    const data = await this.repository.find();
-
-    return data.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    }));
-  }
-
-  async findOne(id: string): Promise<UserResponseDto> {
+  async handleFindOne(id: string): Promise<User> {
     if (!isUUID(id)) throw new NotFoundException('Invalid id');
 
     const user = await this.repository.findOneBy({ id });
@@ -108,29 +84,11 @@ export class AuthService {
     }
 
     return user;
-  }
-
-  async handleFindOne(id: string): Promise<Auth> {
-    if (!isUUID(id)) throw new NotFoundException('Invalid id');
-
-    const user = await this.repository.findOneBy({ id });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
-  }
-
-  async update(id: string, dto: UpdateAuthDto) {
-    const user = await this.handleFindOne(id);
-
-    this.repository.merge(user, dto);
-
-    return this.repository.save(user);
   }
 
   async updatePassword(id: string, dto: UpdatePasswordDto) {
+    validateUUID(id);
+
     const user = await this.handleFindOne(id);
 
     const isCurrentPasswordValid = await verifyPassword(
@@ -138,15 +96,13 @@ export class AuthService {
       user.password,
     );
 
-    if (!isCurrentPasswordValid) {
+    if (!isCurrentPasswordValid)
       throw new ConflictException('Current password is incorrect');
-    }
 
-    if (dto.newPassword !== dto.confirmNewPassword) {
+    if (dto.newPassword !== dto.confirmNewPassword)
       throw new ConflictException(
         'New password and confirm password do not match',
       );
-    }
 
     const hashedPassword: string = await hashPassword(dto.newPassword);
 
@@ -157,11 +113,5 @@ export class AuthService {
     return {
       message: 'Password updated successfully',
     };
-  }
-
-  async remove(id: string) {
-    const user = await this.handleFindOne(id);
-
-    return this.repository.remove(user);
   }
 }

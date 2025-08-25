@@ -9,16 +9,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/categories.entity';
 import { Repository } from 'typeorm';
 import { isUUID } from 'class-validator';
-import { AuthService } from 'src/auth/auth.service';
 import { CategoryResponseDto } from './dto/category-response.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private readonly repository: Repository<Category>,
-    private authService: AuthService,
+    private usersService: UsersService,
   ) {}
 
   async create(dto: CreateCategoryDto) {
@@ -30,7 +30,7 @@ export class CategoriesService {
 
     if (!isUUID(dto.userId)) throw new BadRequestException('Invalid user id');
 
-    const userExists = await this.authService.findOne(dto.userId);
+    const userExists = await this.usersService.findOne(dto.userId);
 
     if (!userExists) throw new NotFoundException('User not found');
 

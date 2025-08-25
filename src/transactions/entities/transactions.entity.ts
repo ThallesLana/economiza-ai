@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
-import { Auth } from 'src/auth/entities/auth.entity';
 import { Category } from 'src/categories/entities/categories.entity';
+import { User } from 'src/users/entities/users.entity';
 import {
   Column,
   CreateDateColumn,
@@ -45,9 +45,9 @@ export class Transaction {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Auth, (user) => user.transactions, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user: Auth;
+  user: User;
 
   @ManyToOne(() => Category, (category) => category.transactions, {
     onDelete: 'CASCADE',

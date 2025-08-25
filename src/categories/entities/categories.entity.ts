@@ -1,4 +1,4 @@
-import { Auth } from 'src/auth/entities/auth.entity';
+import { User } from 'src/users/entities/users.entity';
 import { Transaction } from 'src/transactions/entities/transactions.entity';
 import {
   Column,
@@ -31,9 +31,9 @@ export class Category {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Auth, (user) => user.categories, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.categories, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user: Auth;
+  user: User;
 
   @OneToMany(() => Transaction, (transaction) => transaction.category, {
     cascade: true,

@@ -7,7 +7,7 @@
 - **PostgreSQL**
  
 #### ✅ **ORM:**
-- **Prisma**
+- **TypeORM**
 
 ---
 
@@ -17,13 +17,13 @@ Modularização:
 
 ```bash
 src/
-├── auth/              # Login, JWT, guardas
-├── common/            # Filtros, pipes, interceptors
-├── transactions/      # Receitas, despesas
-├── categories/        # Alimentação, Transporte, etc.
-├── goals/             # Metas financeiras
-├── reports/           # Resumo mensal, exportações
-├── users/             # Perfil do usuário
+├── auth/              # Login, JWT, guardas ✅
+├── common/            # Filtros, pipes, interceptors ✅
+├── transactions/      # Receitas, despesas ✅
+├── categories/        # Alimentação, Transporte, etc. ✅
+├── goals/             # Metas financeiras 🔜
+├── reports/           # Resumo mensal, exportações 🔜
+├── users/             # Perfil do usuário ✅
 ```
 
 ---
