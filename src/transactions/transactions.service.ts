@@ -1,13 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { FilterGetTransaction, JwtPayload } from 'src/common/interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Transaction } from './entities/transactions.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { CategoriesService } from 'src/categories/categories.service';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { isUUID } from 'class-validator';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { FilterGetTransactionDto } from './dto/filter-get-transaction.dto';
+import { FinancialSummaryFilterDto } from './dto/financial-summary-filter.dto';
+import { FinancialSummaryDto } from './dto/financial-summary.dto';
+import { Transaction } from './entities/transactions.entity';
+import {
+  JwtPayload,
+  FinancialSummaryRaw,
+  FilterGetTransaction,
+} from '../common/interfaces';
+import { CategoriesService } from 'src/categories/categories.service';
+import { buildDateFilter } from '../common/utils/date-filter.util';
 
 @Injectable()
 export class TransactionsService {
@@ -100,5 +107,60 @@ export class TransactionsService {
     if (!transaction) throw new NotFoundException('Transaction not found');
 
     return this.repository.remove(transaction);
+  }
+
+  async getFinancialSummary(
+    user: JwtPayload,
+    filters: FinancialSummaryFilterDto,
+  ): Promise<FinancialSummaryDto> {
+    const queryBuilder = this.repository
+      .createQueryBuilder('transaction')
+      .where('transaction.userId = :userId', { userId: user.id });
+
+    const { startDate, endDate, year } = buildDateFilter(filters);
+
+    if (startDate && endDate) {
+      queryBuilder.andWhere(
+        'transaction.transactionDate BETWEEN :startDate AND :endDate',
+        { startDate, endDate },
+      );
+    }
+
+    if (year) {
+      queryBuilder.andWhere(
+        'EXTRACT(YEAR FROM transaction.transactionDate) = :year',
+        { year },
+      );
+    }
+
+    if (filters.categoryId) {
+      queryBuilder.andWhere('transaction.categoryId = :categoryId', {
+        categoryId: filters.categoryId,
+      });
+    }
+
+    const result: FinancialSummaryRaw | undefined = await queryBuilder
+      .select([
+        "SUM(CASE WHEN transaction.type = 'income' THEN transaction.amount ELSE 0 END) as totalincome",
+        "SUM(CASE WHEN transaction.type = 'expense' THEN transaction.amount ELSE 0 END) as totalexpense",
+        'COUNT(*) as totaltransactions',
+      ])
+      .getRawOne();
+
+    const totalIncome = parseFloat(result?.totalincome || '0') || 0;
+    const totalExpense = parseFloat(result?.totalexpense || '0') || 0;
+    const totalTransactions = parseInt(result?.totaltransactions || '0') || 0;
+    const period = {
+      startDate: filters.startDate || '',
+      endDate: filters.endDate || '',
+    };
+
+    return new FinancialSummaryDto(
+      totalIncome,
+      totalExpense,
+      totalTransactions,
+      String(year || ''),
+      period,
+    );
   }
 }

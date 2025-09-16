@@ -17,6 +17,7 @@ import { User } from 'src/common/decorators/user.decorator';
 import { JwtPayload } from 'src/common/interfaces';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { FilterGetTransactionDto } from './dto/filter-get-transaction.dto';
+import { FinancialSummaryFilterDto } from './dto/financial-summary-filter.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -191,6 +192,14 @@ export class TransactionsController {
     @Query() filterDto: FilterGetTransactionDto,
   ) {
     return await this.transactionsService.findAll(user, filterDto);
+  }
+
+  @Get('summary')
+  async getFinancialSummary(
+    @User() user: JwtPayload,
+    @Query() filters: FinancialSummaryFilterDto,
+  ) {
+    return await this.transactionsService.getFinancialSummary(user, filters);
   }
 
   @Get(':id')
