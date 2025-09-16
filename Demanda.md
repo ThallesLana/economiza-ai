@@ -9,6 +9,9 @@
 #### ✅ **ORM:**
 - **TypeORM**
 
+#### ✅ **Autenticação:**
+- **JWT**
+
 ---
 
 ### 🧱 Estrutura de Domínio Sugerida

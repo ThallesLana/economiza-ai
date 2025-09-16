@@ -28,7 +28,7 @@ A aplicação permite que usuários cadastrem, organizem e acompanhem suas trans
 - ✅ CRUD de categorias
 - ✅ Associação de transações por usuário
 - ✅ Filtros por data, categoria e tipo (income/expense)
-- 🔜 Documentação da API (Swagger)
+- ✅ Documentação da API (Swagger)
 - 🔜 Resumo financeiro (total de entradas, saídas e saldo)
 - 🔜 Sistema de metas e alertas personalizados
 
