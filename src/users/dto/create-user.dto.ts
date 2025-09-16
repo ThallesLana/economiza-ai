@@ -1,4 +1,3 @@
-import { Optional } from '@nestjs/common';
 import {
   IsEmail,
   IsNotEmpty,
@@ -24,7 +23,7 @@ export class CreateUserDto {
     format: 'email',
   })
   @IsEmail()
-  @Optional()
+  @IsNotEmpty()
   email?: string;
 
   @ApiProperty({
