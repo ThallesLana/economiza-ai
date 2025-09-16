@@ -16,7 +16,9 @@ async function bootstrap() {
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('api', app, documentFactory, {
+    customSiteTitle: 'Economiza AI - API Documentation',
+  });
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
