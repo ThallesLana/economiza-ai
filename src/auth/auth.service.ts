@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,23 +20,6 @@ export class AuthService {
     @InjectRepository(User)
     private readonly repository: Repository<User>,
   ) {}
-
-  async create(dto: CreateAuthDto) {
-    const userExists = await this.repository.findOne({
-      where: { email: dto.email },
-    });
-
-    if (userExists) throw new ConflictException('User already exists');
-
-    const hashedPassword: string = await hashPassword(dto.password);
-
-    const newUser = this.repository.create({
-      ...dto,
-      password: hashedPassword,
-    });
-
-    return this.repository.save(newUser);
-  }
 
   async login(dto: LoginAuthDto, res: Response) {
     const { email, password } = dto;
@@ -99,7 +81,7 @@ export class AuthService {
     if (!isCurrentPasswordValid)
       throw new ConflictException('Current password is incorrect');
 
-    if (dto.newPassword !== dto.confirmNewPassword)
+    if (dto.newPassword.localeCompare(dto.confirmNewPassword))
       throw new ConflictException(
         'New password and confirm password do not match',
       );
