@@ -8,8 +8,14 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { AtLeastOneSummaryFilter } from './at-least-one-summary-filter.validator';
 
 export class FinancialSummaryFilterDto {
+  @AtLeastOneSummaryFilter({
+    message:
+      'Informe pelo menos um dos filtros: year, year+month ou startDate+endDate.',
+  })
+  _atLeastOne!: any;
   @IsOptional()
   @IsDateString()
   @ValidateIf((o) => !o.year)
