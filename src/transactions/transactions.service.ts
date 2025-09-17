@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { isUUID } from 'class-validator';
@@ -120,6 +124,17 @@ export class TransactionsService {
     const { startDate, endDate, year } = buildDateFilter(filters);
 
     if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diffInMs = end.getTime() - start.getTime();
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 366) {
+        throw new NotAcceptableException(
+          'O intervalo entre startDate e endDate não pode ser maior que 1 ano.',
+        );
+      }
+
       queryBuilder.andWhere(
         'transaction.transactionDate BETWEEN :startDate AND :endDate',
         { startDate, endDate },
