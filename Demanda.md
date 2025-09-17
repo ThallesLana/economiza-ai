@@ -1,4 +1,4 @@
-### 🔧 Tech Stack Recomendado
+### 🔧 Tech Stack
 
 #### ✅ **Framework:**
 - **NestJS**
@@ -12,9 +12,25 @@
 #### ✅ **Autenticação:**
 - **JWT**
 
+#### ✅ **Documentação:**
+- **Swagger**
+
 ---
 
-### 🧱 Estrutura de Domínio Sugerida
+### 🧱 Estrutura de Domínio
+
+Modularização:
+
+```bash
+src/
+├── auth/              # Login, JWT, guardas ✅
+├── common/            # Filtros, pipes, interceptors ✅
+├── transactions/      # Receitas, despesas ✅
+├── categories/        # Alimentação, Transporte, etc. ✅
+├── users/             # Perfil do usuário ✅
+```
+
+### 🧱 Estrutura de Domínio Futura
 
 Modularização:
 
@@ -28,26 +44,3 @@ src/
 ├── reports/           # Resumo mensal, exportações 🔜
 ├── users/             # Perfil do usuário ✅
 ```
-
----
-
-### 🛠️ Funcionalidades Iniciais
-
-#### Usuários
-- Registro e login com JWT
-- Recuperação de senha
-- Atualização de perfil
-
-#### Transações
-- Criar/editar/excluir
-- Tipos: Receita / Despesa
-- Filtros por data, categoria, valor
-
-#### Metas
-- Criar metas mensais ou anuais
-- Ver progresso
-
-#### Relatórios
-- Saldo por período
-- Porcentagem por categoria
-- Exportação CSV/PDF

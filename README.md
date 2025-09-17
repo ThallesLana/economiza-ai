@@ -19,6 +19,9 @@ A aplicação permite que usuários cadastrem, organizem e acompanhem suas trans
 - [JWT](https://jwt.io/) - Autenticação segura por token
 
 ---
+## 📚 Documentação da API
+  - Acessar a documentação da API no endereço: http://localhost:3000/api
+---
 
 ## 📦 Funcionalidades (MVP)
 
@@ -29,12 +32,24 @@ A aplicação permite que usuários cadastrem, organizem e acompanhem suas trans
 - ✅ Associação de transações por usuário
 - ✅ Filtros por data, categoria e tipo (income/expense)
 - ✅ Documentação da API (Swagger)
-- 🔜 Resumo financeiro (total de entradas, saídas e saldo)
-- 🔜 Sistema de metas e alertas personalizados
+- ✅ Resumo financeiro (total de entradas, saídas e saldo)
+
+---
+
+## 📦 Funcionalidades Futuras
+
+#### Metas
+- Criar metas mensais ou anuais
+- Ver progresso
+
+#### Relatórios
+- Saldo por período
+- Porcentagem por categoria
+- Exportação CSV/PDF
 
 ---
 
 ## ⏳ Status do Projeto:
-- 🚧 Em construção!
+- ✅ MVP concluído
 
 ---
