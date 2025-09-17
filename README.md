@@ -49,6 +49,40 @@ A aplicação permite que usuários cadastrem, organizem e acompanhem suas trans
 
 ---
 
+## 📝 Como Rodar Localmente
+
+Siga o passo a passo abaixo para subir o projeto em ambiente local:
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/ThallesLana/economiza-ai.git
+   cd economiza-ai
+   ```
+
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure as variáveis de ambiente:**
+
+   Duplique o arquivo `.env.example` para `.env` e preencha as variáveis de ambiente.
+
+4. **Configure o banco de dados (PostgreSQL via Docker):**
+   ```bash
+   docker-compose up -d
+   ```
+   Isso irá subir um container PostgreSQL acessível em `localhost:5432` com usuário e senha iguais ao definido no arquivo `.env`.
+
+5. **Inicie a aplicação em modo desenvolvimento:**
+   ```bash
+   npm run start:dev
+   ```
+
+6. **Acesse a documentação da API:**
+   - Acesse: [http://localhost:3000/api](http://localhost:3000/api)
+
+---
 ## ⏳ Status do Projeto:
 - ✅ MVP concluído
 
