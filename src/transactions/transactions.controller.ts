@@ -195,6 +195,86 @@ export class TransactionsController {
   }
 
   @Get('summary')
+  @ApiOperation({
+    summary: 'Resumo financeiro do usuário',
+    description:
+      'Retorna o resumo financeiro do usuário autenticado, incluindo receitas, despesas, saldo, total de transações e período filtrado. Permite filtros por data, categoria, ano e mês.',
+  })
+  @ApiQuery({
+    name: 'startDate',
+    required: false,
+    type: 'string',
+    format: 'date-time',
+    description:
+      'Data inicial do período (ISO 8601). Ignorado se year for informado.',
+    example: '2024-01-01T00:00:00.000Z',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    required: false,
+    type: 'string',
+    format: 'date-time',
+    description:
+      'Data final do período (ISO 8601). Ignorado se year for informado.',
+    example: '2024-12-31T23:59:59.000Z',
+  })
+  @ApiQuery({
+    name: 'categoryId',
+    required: false,
+    type: 'string',
+    description: 'Filtrar por ID da categoria',
+    example: 'uuid-categoria-alimentacao',
+  })
+  @ApiQuery({
+    name: 'year',
+    required: false,
+    type: 'integer',
+    description:
+      'Ano para resumo anual. Ignora startDate/endDate se informado.',
+    example: 2024,
+  })
+  @ApiQuery({
+    name: 'month',
+    required: false,
+    type: 'integer',
+    description: 'Mês para resumo mensal (1-12). Requer year.',
+    example: 9,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Resumo financeiro retornado com sucesso',
+    schema: {
+      example: {
+        totalIncome: 10000.5,
+        totalExpense: 4500.75,
+        balance: 5499.75,
+        totalTransactions: 18,
+        year: 2024,
+        period: {
+          startDate: '2024-01-01T00:00:00.000Z',
+          endDate: '2024-12-31T23:59:59.000Z',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Parâmetros inválidos',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: [
+          'startDate must be a valid ISO 8601 date string',
+          'year must not be less than 2000',
+        ],
+        error: 'Bad Request',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token de autenticação inválido ou ausente',
+  })
   async getFinancialSummary(
     @User() user: JwtPayload,
     @Query() filters: FinancialSummaryFilterDto,
