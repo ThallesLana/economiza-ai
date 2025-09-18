@@ -19,8 +19,10 @@ import { UsersModule } from './users/users.module';
       password: process.env.DB_PASSWORD?.toString(),
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // só usar em dev!
-      logging: true,
+      migrations: [__dirname + '/migrations/*{.ts,.js}'],
+      migrationsRun: process.env.NODE_ENV !== 'production',
+      synchronize: process.env.NODE_ENV !== 'production',
+      logging: process.env.NODE_ENV !== 'production' ? true : ['error', 'warn'],
     }),
     AuthModule,
     TransactionsModule,
