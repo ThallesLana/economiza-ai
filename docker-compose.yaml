@@ -1,15 +1,39 @@
 services:
   db:
     image: postgres:latest
-    container_name: economiza-ai-db
+    container_name: economiza_ai_db
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     ports:
-      - '5432:5432'
+      - '${DB_PORT}:${DB_PORT}'
     volumes: 
       - db:/var/lib/postgresql/data
+    networks:
+      - economiza_ai_network
+  
+  api:
+    build: .
+    container_name: economiza_ai_api
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - db
+    networks:
+      - economiza_ai_network
+
+networks:
+  economiza_ai_network:
+    driver: bridge
+
 volumes:
   db:
     driver: local
