@@ -19,4 +19,4 @@ RUN npm install --omit=dev --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
 
-CMD ["sh", "-c", "npm run typeorm:migrate && node dist/main.js"]
+CMD ["sh", "-c", "npm run migration:run && node dist/main.js"]
