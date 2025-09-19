@@ -4,6 +4,15 @@ export class InitialSchema1758224691516 implements MigrationInterface {
   name = 'InitialSchema1758224691516';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    // Create enums first
+    await queryRunner.query(
+      `CREATE TYPE "public"."Transactions_type_enum" AS ENUM('income', 'expense')`,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "public"."Users_status_enum" AS ENUM('active', 'inactive')`,
+    );
+
+    // Create tables
     await queryRunner.query(
       `CREATE TABLE "Transactions" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "description" character varying, "amount" numeric(10,2) NOT NULL, "type" "public"."Transactions_type_enum" NOT NULL, "categoryId" uuid, "transactionDate" TIMESTAMP NOT NULL, "userId" uuid NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_7761bf9766670b894ff2fdb3700" PRIMARY KEY ("id"))`,
     );
@@ -37,5 +46,9 @@ export class InitialSchema1758224691516 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "Users"`);
     await queryRunner.query(`DROP TABLE "Categories"`);
     await queryRunner.query(`DROP TABLE "Transactions"`);
+
+    // Drop enums last
+    await queryRunner.query(`DROP TYPE "public"."Users_status_enum"`);
+    await queryRunner.query(`DROP TYPE "public"."Transactions_type_enum"`);
   }
 }

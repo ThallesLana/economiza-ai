@@ -18,5 +18,6 @@ COPY --from=builder /app/package*.json ./
 RUN npm install --omit=dev --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/typeorm.config.ts ./
 
-CMD ["sh", "-c", "npm run migration:run && node dist/main.js"]
+CMD ["sh", "-c", "npm run migration:run && node dist/src/main.js"]
