@@ -5,12 +5,22 @@ export class InitialSchema1758224691516 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Create enums first
-    await queryRunner.query(
-      `CREATE TYPE "public"."Transactions_type_enum" AS ENUM('income', 'expense')`,
-    );
-    await queryRunner.query(
-      `CREATE TYPE "public"."Users_status_enum" AS ENUM('active', 'inactive')`,
-    );
+    await queryRunner.query(`
+      DO $$
+      BEGIN
+          IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'transactions_type_enum') THEN
+              CREATE TYPE "public"."Transactions_type_enum" AS ENUM('income', 'expense');
+          END IF;
+      END$$;
+      `);
+    await queryRunner.query(`
+      DO $$
+      BEGIN
+          IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'users_status_enum') THEN
+              CREATE TYPE "public"."Users_status_enum" AS ENUM('active', 'inactive');
+          END IF;
+      END$$;
+      `);
 
     // Create tables
     await queryRunner.query(
