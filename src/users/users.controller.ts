@@ -92,6 +92,8 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Listar todos os usuários',
     description: 'Retorna uma lista com todos os usuários cadastrados',
@@ -118,6 +120,10 @@ export class UsersController {
         },
       ],
     },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token de autenticação inválido ou ausente',
   })
   findAll() {
     return this.usersService.findAll();
